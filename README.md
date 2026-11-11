@@ -31,32 +31,32 @@ A comprehensive short-circuit study was executed to determine the maximum prospe
 To prove the reliability of the design, the protection coordination was evaluated across 5 critical paths, tracing from the Incoming Utility (PLN) down to the specific end-user loads.
 
 ### 4.1. Path 1: Incoming PLN to Load UDB-L10-A3
-**Status: SUCCESS (Total Selectivity Achieved)**
+**Status: SUCCESS**
 *   **Evaluation:** Complete discrimination is established from the downstream LVCB at UDB-L10-A3 up to the main utility relay. A strict Coordinating Time Interval (CTI) of >150ms is maintained.
 *   **Transformer Protection:** The MV Relay curve safely bypasses the inrush current of the intermediate step-down transformer while remaining securely to the left of the transformer's thermal damage curve.
 *   **Visual Proof:**
     ![TCC - Path 1](images/TCC_Curve_UDB-L10-A3_page-0001.jpg)
 
 ### 4.2. Path 2: Incoming PLN to Load UDB-L10-A1
-**Status: SUCCESS (SSTU Short-Time Optimization)**
+**Status: SUCCESS**
 *   **Evaluation:** Initial overlap issues at the Low Voltage level were successfully resolved by upgrading the main LVCB to a Solid State Trip Unit (SSTU). By disabling the main LVCB's Instantaneous element and tuning the Short-Time delay (tsd) to 0.2s, faults at UDB-L10-A1 are cleared locally without tripping the upstream main breaker.
 *   **Visual Proof:**
     ![TCC - Path 2](images/TCC_Curve_UDB-L10-A1_page-0001.jpg)
 
 ### 4.3. Path 3: Incoming PLN to Load UDB-L10-A2
-**Status: SUCCESS (Thermal Limit Compliance)**
+**Status: SUCCESS**
 *   **Evaluation:** The protection scheme for this distribution path demonstrates absolute thermal safety. All relay and LVCB operational curves are positioned strictly below and to the left of the associated cable ampacity and damage curves, guaranteeing that fault currents are isolated before cable insulation degrades.
 *   **Visual Proof:**
     ![TCC - Path 3](images/TCC_Curve_UDB-L10-A2_page-0001.jpg)
 
 ### 4.4. Path 4: Incoming PLN to Load UDB-L10-A4
-**Status: SUCCESS (Multi-Tier MV Grading)**
+**Status: SUCCESS**
 *   **Evaluation:** This path involves multi-stage grading through several Medium Voltage buses. The Time Dial settings across the upstream and downstream MV relays are perfectly staggered. This ensures that any severe bolted fault at the UDB-L10-A4 level is cleared instantly by the LVCB, with the MV relays acting as a reliable, delayed backup.
 *   **Visual Proof:**
     ![TCC - Path 4](images/TCC_Curve_UDB-L10-A4_page-0001.jpg)
 
 ### 4.5. Path 5: Incoming PLN to Mechanical Load LDMP-L2-CH1
-**Status: SUCCESS (Motor Starting Immunity)**
+**Status: SUCCESS**
 *   **Evaluation:** Unlike static IT loads, this path supplies a heavy mechanical Chiller (Motor Load). The coordination is highly successful; the protective devices are precisely calibrated to sit to the **right** of the Chiller's extreme starting current profile. This allows the heavy motors to start up seamlessly without triggering nuisance trips, while still protecting against locked-rotor or short-circuit events.
 *   **Visual Proof:**
     ![TCC - Path 5](images/TCC_Curve_LDMP-L2-CH1_page-0001.jpg)
