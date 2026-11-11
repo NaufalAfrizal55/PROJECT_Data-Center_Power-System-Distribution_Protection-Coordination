@@ -10,9 +10,11 @@
 This project demonstrates the design and validation of an electrical power distribution system for a **2770 kVA Mission-Critical Data Center**. Unlike standard commercial buildings, data centers demand uncompromising power reliability and high availability. The primary focus of this study is to engineer a highly selective protection coordination scheme. The goal is to ensure that any localized fault (e.g., at a server rack PDU, UPS, or precision cooling unit) is cleared instantaneously by the nearest downstream device, preventing cascading outages that could disrupt facility-wide IT operations.
 
 <!-- **Key Engineering Standards:**
-*   **IEEE 242 (Buff Book):** Guidelines for Protection and Coordination of Industrial and Commercial Power Systems.
-*   **IEC 60909:** Short-circuit current calculations in three-phase AC systems.
-*   **ANSI/TIA-942:** Telecommunications Infrastructure Standard for Data Centers (Power Reliability considerations). -->
+
+* **IEEE 242 (Buff Book):** Guidelines for Protection and Coordination of Industrial and Commercial Power Systems.
+* **IEC 60909:** Short-circuit current calculations in three-phase AC systems.
+* **ANSI/TIA-942:** Telecommunications Infrastructure Standard for Data Centers.
+* **IEEE 1584 & NFPA 70E:** Guide for Performing Arc-Flash Hazard Calculations and Standard for Electrical Safety in the Workplace. -->
 
 ## 2. Single Line Diagram (SLD) & Topology
 The electrical topology receives utility power at the Medium Voltage level (20 kV) and distributes it through multiple complex MV zones before stepping down to Low Voltage (400V) for IT and mechanical loads. 
@@ -74,7 +76,38 @@ The following are the finalized, field-ready protection settings for the Main In
 | **Phase (ANSI 50)** | Instantaneous Pickup | 7.2 A | 1080 A |
 | | Instantaneous Delay | 0.04 s | - |
 
-## 6. Engineering Challenges & Problem Solving
+## 6. Arc Flash Hazard Analysis & Safety Compliance
+
+In adherence to **IEEE 1584** and **NFPA 70E**, an Arc Flash Hazard assessment was conducted to determine the Incident Energy (cal/cm²), Arc Flash Boundary, and required Personal Protective Equipment (PPE) levels for facility maintenance personnel.
+
+Based on the SLD topology, Arc Flash Labels were generated and evaluated for the following critical operating zones (≥ 50V):
+
+### 6.1. Medium Voltage (MV) Switchgear
+**Analyzed Buses:** `20 kV MVP-L1-CSR-A`, `MVSB-L4-A1`, and `MVSB-L2-CH1`
+* **Evaluation:** Assessed to ensure safety during relay maintenance and breaker racking at the main utility interconnections and primary distribution loops.
+* **Arc Flash Label:**
+  ![Arc Flash Label - MV Switchgear](images/Label_ArcFlash_20%20kV%20MVP-L1-CSR-A_page-0001.jpg)
+  ![Arc Flash Label - LVMDP](images/Label_ArcFlash_MVSB-L4-A1_page-0001.jpg) 
+  ![Arc Flash Label - MCC](images/Label_ArcFlash_MVSB-L2-CH1_page-0001.jpg)
+
+
+### 6.2. UPS Distribution Boards (UDB)
+**Analyzed Buses:** `UDB-L10-A1` through `UDB-L10-A4`
+* **Evaluation:** Critical evaluation required to protect IT operations engineers performing live additions, maintenance, or inspections of PDU and server rack feeds.
+* **Arc Flash Label:**
+  ![Arc Flash Label - LVMDP](images/Label_ArcFlash_USB-L10-A3_page-0001.jpg)
+  ![Arc Flash Label - LVMDP](images/Label_ArcFlash_USB-L10-A1_page-0001.jpg) 
+  ![Arc Flash Label - LVMDP](images/Label_ArcFlash_USB-L10-A2_page-0001.jpg) 
+  ![Arc Flash Label - LVMDP](images/Label_ArcFlash_USB-L10-A4_page-0001.jpg) 
+
+### 6.4. Mechanical (MCC) Panels
+**Analyzed Buses:** `LDMP-L2-CH1`
+* **Evaluation:** Hazard assessment for the mechanical plant room to ensure safety for technicians conducting live troubleshooting on CRAC units and Chiller contactors/inverters.
+* **Arc Flash Label:**
+  ![Arc Flash Label - MCC](images/Label_ArcFlash_LDMP-L2-C1_page-0001.jpg)
+
+
+## 7. Engineering Challenges & Problem Solving
 During the simulation phase, several critical coordination conflicts were identified and resolved using first-principles engineering:
 1.  **Utility Capacity vs. Contract Paradox:** Discovered a flaw in the legacy parameters where the combined physical capacity of all transformers (including a 10 MVA standby loadbank) vastly exceeded the utility contract setting (~80A). Resolved this by designing the Main Relay (MVP) to isolate non-concurrent loads, allowing the Utility Relay to be properly graded without causing facility-wide blackouts during peak IT demand.
 2.  **Mitigating Critical Thermal Energy Warnings:** Fault analyses at high-capacity buses triggered thermal limit violations on downstream breakers. Mitigated by activating and meticulously tuning the **Instantaneous (Ii)** element on downstream trip units to bypass delay timers, extinguishing the arc before thermal damage occurred.
