@@ -20,28 +20,51 @@ The electrical topology receives utility power at the Medium Voltage level (20 k
 ![Data Center Single Line Diagram](images/SLD%20Proteksi.jpg)
 *> Note: The SLD illustrates the redundant MV loops, step-down transformers, and the placement of main utility and feeder relays.*
 
-## 3. Short-Circuit Analysis & Equipment Rating Validation
-A comprehensive short-circuit study was executed to determine the maximum prospective 3-phase and single-line-to-ground fault currents across all mission-critical buses. 
-
-![Short Circuit Analysis Report](images/SC_Complete.jpg)
+### 3. Short-Circuit Analysis & Equipment Rating Validation
+A comprehensive short-circuit study was executed to determine the maximum prospective 3-phase and single-line-to-ground fault currents across all mission-critical buses.
 
 **Equipment Rating Validation:**
 *   Evaluated Low Voltage Circuit Breakers (LVCB) supplying the UPS and HVAC (CRAC) systems against extreme fault currents.
 *   Verified that the selected LVCB **Interrupting Ratings (kA)** safely exceed the simulated fault currents, ensuring the thermal energy ($I^2t$) remains within the equipment's physical limits during a fault, preventing catastrophic breaker failure.
 
-## 4. Time-Current Characteristic (TCC) Curves
-Selective coordination was achieved by carefully plotting and adjusting the TCC curves of upstream and downstream devices to ensure maximum uptime for unaffected data hall zones.
+## 4. Time-Current Characteristic (TCC) Coordination Analysis
+To prove the reliability of the design, the protection coordination was evaluated across 5 critical paths, tracing from the Incoming Utility (PLN) down to the specific end-user loads.
 
-![TCC Curve](path/to/your/tcc_curve_image.png)
+### 4.1. Path 1: Incoming PLN to Load UDB-L10-A3
+**Status: SUCCESS (Total Selectivity Achieved)**
+*   **Evaluation:** Complete discrimination is established from the downstream LVCB at UDB-L10-A3 up to the main utility relay. A strict Coordinating Time Interval (CTI) of >150ms is maintained.
+*   **Transformer Protection:** The MV Relay curve safely bypasses the inrush current of the intermediate step-down transformer while remaining securely to the left of the transformer's thermal damage curve.
+*   **Visual Proof:**
+    ![TCC - Path 1](images/TCC_Curve_UDB-L10-A3_page-0001.jpg)
 
-**Coordination Philosophy:**
-*   **Transformer & Motor Starting Immunity:** MV Relay curves are positioned strictly to the **right** of the Transformer Magnetizing Inrush points and heavy mechanical (Chiller) starting curves to prevent nuisance tripping during facility black-starts.
-*   **Thermal Protection Limits:** All protection curves are maintained strictly to the **left and below** the Transformer and Cable Damage Curves to ensure rapid fault clearing before thermal destruction limits are breached.
+### 4.2. Path 2: Incoming PLN to Load UDB-L10-A1
+**Status: SUCCESS (SSTU Short-Time Optimization)**
+*   **Evaluation:** Initial overlap issues at the Low Voltage level were successfully resolved by upgrading the main LVCB to a Solid State Trip Unit (SSTU). By disabling the main LVCB's Instantaneous element and tuning the Short-Time delay (tsd) to 0.2s, faults at UDB-L10-A1 are cleared locally without tripping the upstream main breaker.
+*   **Visual Proof:**
+    ![TCC - Path 2](images/TCC_Curve_UDB-L10-A1_page-0001.jpg)
+
+### 4.3. Path 3: Incoming PLN to Load UDB-L10-A2
+**Status: SUCCESS (Thermal Limit Compliance)**
+*   **Evaluation:** The protection scheme for this distribution path demonstrates absolute thermal safety. All relay and LVCB operational curves are positioned strictly below and to the left of the associated cable ampacity and damage curves, guaranteeing that fault currents are isolated before cable insulation degrades.
+*   **Visual Proof:**
+    ![TCC - Path 3](images/TCC_Curve_UDB-L10-A2_page-0001.jpg)
+
+### 4.4. Path 4: Incoming PLN to Load UDB-L10-A4
+**Status: SUCCESS (Multi-Tier MV Grading)**
+*   **Evaluation:** This path involves multi-stage grading through several Medium Voltage buses. The Time Dial settings across the upstream and downstream MV relays are perfectly staggered. This ensures that any severe bolted fault at the UDB-L10-A4 level is cleared instantly by the LVCB, with the MV relays acting as a reliable, delayed backup.
+*   **Visual Proof:**
+    ![TCC - Path 4](images/TCC_Curve_UDB-L10-A4_page-0001.jpg)
+
+### 4.5. Path 5: Incoming PLN to Mechanical Load LDMP-L2-CH1
+**Status: SUCCESS (Motor Starting Immunity)**
+*   **Evaluation:** Unlike static IT loads, this path supplies a heavy mechanical Chiller (Motor Load). The coordination is highly successful; the protective devices are precisely calibrated to sit to the **right** of the Chiller's extreme starting current profile. This allows the heavy motors to start up seamlessly without triggering nuisance trips, while still protecting against locked-rotor or short-circuit events.
+*   **Visual Proof:**
+    ![TCC - Path 5](images/TCC_Curve_LDMP-L2-CH1_page-0001.jpg)
 
 ## 5. Protection Setting Configuration (Utility & Feeders)
-The following are the finalized, field-ready protection settings for the Main Incoming Utility Relay, calibrated based on the ETAP simulation and utility grid requirements.
+The following are the finalized, field-ready protection settings for the Main Incoming Utility Relay, calibrated based on the ETAP simulation, correcting legacy design paradoxes to align with actual utility contracts.
 
-### Main Incoming Relay (Relay PLN A)
+### Main Incoming Relay (Relay PLN-A)
 | Element | Parameter | Setting Value | Primary Ampere |
 | :--- | :--- | :--- | :--- |
 | **Global** | **CT Ratio** | **150 / 5 A** | - |
@@ -50,27 +73,8 @@ The following are the finalized, field-ready protection settings for the Main In
 | | Time Dial / Multiplier | 0.1 | - |
 | **Phase (ANSI 50)** | Instantaneous Pickup | 7.2 A | 1080 A |
 | | Instantaneous Delay | 0.04 s | - |
-| **Ground (ANSI 51N)**| Curve Type | IEC Normal Inverse | - |
-| | Tap (Pickup) | 0.4 A | 60 A |
-| | Time Dial / Multiplier | 0.09 | - |
-| **Ground (ANSI 50N)**| Instantaneous Pickup | 2.0 A | 300 A |
 
-### Low Voltage Circuit Breakers (Solid State Trip Units)
-| Device Level | Long-Time (Ir, tr) | Short-Time (Isd, tsd) | Instantaneous (Ii) |
-| :--- | :--- | :--- | :--- |
-| **Main LVCB (Upstream)** | [Insert Value] | [Insert Value] | OFF / [Insert Value] |
-| **IT Rack/UPS Feeder** | [Insert Value] | [Insert Value] | [Insert Value] |
-
-## 6. Sequence of Operation & Selectivity Proof
-To validate the critical coordination, downstream faults were simulated using ETAP's Sequence of Operation module.
-
-![Sequence of Operation](path/to/your/sequence_of_operation_image.png)
-
-**Selectivity Achievements:**
-*   Maintained a strict **Coordinating Time Interval (CTI)** between series LVCBs, successfully clearing downstream faults locally (e.g., at a specific server room PDU) without tripping the Main LV Breakers.
-*   Ensured uninterrupted power delivery to parallel UPS units and active cooling systems during a localized short circuit.
-
-## 7. Engineering Challenges & Problem Solving
-During the simulation phase, several coordination conflicts were identified and resolved using first-principles engineering:
-1.  **Eliminating Sympathetic Tripping in Critical IT Paths:** Initial simulations showed upstream LVCBs tripping simultaneously with downstream devices during high-kA faults. This was resolved by re-calibrating the **Short-Time delay bands (tsd)**, ensuring a proper margin for mechanical clearing, thereby restoring full isolation and selectivity.
-2.  **Mitigating Critical Thermal Energy Warnings:** Fault analyses at high-capacity buses triggered thermal limit violations on downstream breakers. This was mitigated by activating and meticulously tuning the **Instantaneous (Ii)** element on the trip units to bypass delay timers, instantly extinguishing the arc before thermal damage occurred to the switchgear.
+## 6. Engineering Challenges & Problem Solving
+During the simulation phase, several critical coordination conflicts were identified and resolved using first-principles engineering:
+1.  **Utility Capacity vs. Contract Paradox:** Discovered a flaw in the legacy parameters where the combined physical capacity of all transformers (including a 10 MVA standby loadbank) vastly exceeded the utility contract setting (~80A). Resolved this by designing the Main Relay (MVP) to isolate non-concurrent loads, allowing the Utility Relay to be properly graded without causing facility-wide blackouts during peak IT demand.
+2.  **Mitigating Critical Thermal Energy Warnings:** Fault analyses at high-capacity buses triggered thermal limit violations on downstream breakers. Mitigated by activating and meticulously tuning the **Instantaneous (Ii)** element on downstream trip units to bypass delay timers, extinguishing the arc before thermal damage occurred.
